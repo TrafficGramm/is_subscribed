@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'stage'
+    tags:
+      - 'v*'
+  pull_request:
+
+jobs:
+  docker:
+    runs-on:
+      - self-hosted
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/TrafficGramm/support_bot
+          tags: |
+            type=ref,enable=true,priority=600,prefix=,suffix=-{{date 'YYYYMMDDHHmmss' tz='Europe/Moscow'}},event=branch
+            type=ref,enable=true,priority=600,prefix=,suffix=,event=tag
+            type=ref,enable=true,priority=600,prefix=pr-,suffix=-{{date 'YYYYMMDDHHmmss' tz='Europe/Moscow'}},event=pr
+      - name: Log into the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ steps.meta.outputs.tags }} .
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker push ${{ steps.meta.outputs.tags }}

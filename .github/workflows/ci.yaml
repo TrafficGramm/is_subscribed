@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - 'stage'
+      - 'main'
     tags:
       - 'v*'
   pull_request:
@@ -24,7 +25,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/TrafficGramm/support_bot
+            ghcr.io/TrafficGramm/is_subscribed
           tags: |
             type=ref,enable=true,priority=600,prefix=,suffix=-{{date 'YYYYMMDDHHmmss' tz='Europe/Moscow'}},event=branch
             type=ref,enable=true,priority=600,prefix=,suffix=,event=tag

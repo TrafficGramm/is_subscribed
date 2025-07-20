@@ -23,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/TrafficGramm/core-backsdk
+          images: ghcr.io/TrafficGramm/is_subscribed
           tags: |
             type=ref,event=branch,suffix=-{{date 'YYYYMMDDHHmmss' tz='Europe/Moscow'}}
             type=semver,pattern={{version}},event=release

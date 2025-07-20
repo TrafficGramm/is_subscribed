@@ -20,4 +20,4 @@ COPY . .
 # Установка зависимостей
 RUN uv sync --frozen
 
-CMD ["uv", "run", "uvicorn", "app.main:app", "--port=8080", "--reload"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host=0.0.0.0", "--port=8080", "--reload"]
